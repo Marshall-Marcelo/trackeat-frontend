@@ -1,15 +1,39 @@
 import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import Button from '../../components/Button';
+import { useRegisterAccount } from '@/hooks/useRegister';
+import { toast } from 'sonner';
 
 const RegisterPage = () => {
+  const { mutate, isPending } = useRegisterAccount();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Add Modal Here
+    if (!email || !password) {
+      alert('Incomplete fields');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert('Password Mismatch');
+      return;
+    }
+
+    if (isPending) return <h1>Loading</h1>;
+
+    mutate(
+      { email, password },
+      {
+        onError: (error) => {
+          toast.error(error.message);
+          console.error('Account creation failed', error);
+        },
+      },
+    );
   };
 
   return (
@@ -59,7 +83,7 @@ const RegisterPage = () => {
             Confirm Password
           </label>
           <input
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             className="border px-2 py-1 rounded focus:outline-none"
             type="password"
             id="cf-password-credential"

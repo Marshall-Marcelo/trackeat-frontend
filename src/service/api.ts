@@ -15,7 +15,8 @@ class ApiService {
       });
 
       if (!response.ok) {
-        throw new Error(await response.text());
+        const data = await response.json();
+        throw new Error(data.message);
       }
 
       return response.json() as Promise<T>;

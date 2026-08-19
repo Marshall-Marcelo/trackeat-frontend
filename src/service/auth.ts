@@ -1,6 +1,6 @@
 import { ApiService } from './api';
 import type { LoginResponse } from '../types/auth-types';
-import type { MessageResponse } from '../types/response';
+import type { MessageResponse } from '@/types/response';
 
 class AuthService extends ApiService {
   async login(
@@ -15,13 +15,10 @@ class AuthService extends ApiService {
     return data;
   }
 
-  async register(
-    nameCredential: string,
-    password: string,
-  ): Promise<MessageResponse> {
+  async register(email: string, password: string): Promise<MessageResponse> {
     const data: MessageResponse = await this.handleFetch(`/auth/register`, {
       method: 'POST',
-      body: JSON.stringify({ nameCredential, password }),
+      body: JSON.stringify({ email, password }),
     });
 
     return data;
