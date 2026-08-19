@@ -1,14 +1,18 @@
 import { useState } from 'react';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import Button from '../../components/Button';
 import { useRegisterAccount } from '@/hooks/useRegister';
 import { toast } from 'sonner';
+import { FormInput } from '@/components/Input';
 
 const RegisterPage = () => {
-  const { mutate, isPending } = useRegisterAccount();
+  const { mutate: createAccount, isPending: isCreatingAccount } =
+    useRegisterAccount();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
+
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -23,11 +27,20 @@ const RegisterPage = () => {
       return;
     }
 
-    if (isPending) return <h1>Loading</h1>;
+    if (isCreatingAccount) return <h1>Loading</h1>;
 
-    mutate(
+    createAccount(
       { email, password },
       {
+        onSuccess: () => {
+          toast.success('Account created sucessfully');
+          setEmail('');
+          setPassword('');
+          setConfirmPassword('');
+          navigate({
+            to: '/login',
+          });
+        },
         onError: (error) => {
           toast.error(error.message);
           console.error('Account creation failed', error);
@@ -52,45 +65,30 @@ const RegisterPage = () => {
         </Link>
       </span>
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-        <div className="flex flex-col">
-          <label className="text-sm" htmlFor="name-credential">
-            Email Address
-          </label>
-          <input
-            onChange={(e) => setEmail(e.target.value)}
-            className="border px-2 py-1 rounded focus:outline-none"
-            type="text"
-            id="name-credential"
-            name="name-credential"
-            placeholder="john.doe@example.com"
-          />
-        </div>
-        <div className="flex flex-col">
-          <label className="text-sm" htmlFor="password-credential">
-            Password
-          </label>
-          <input
-            onChange={(e) => setPassword(e.target.value)}
-            className="border px-2 py-1 rounded focus:outline-none"
-            type="password"
-            id="password-credential"
-            name="password-credential"
-            placeholder="••••••••"
-          />
-        </div>
-        <div className="flex flex-col">
-          <label className="text-sm" htmlFor="cf-password-credential">
-            Confirm Password
-          </label>
-          <input
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="border px-2 py-1 rounded focus:outline-none"
-            type="password"
-            id="cf-password-credential"
-            name="cf-password-credential"
-            placeholder="••••••••"
-          />
-        </div>
+        <FormInput
+          type="text"
+          labelValue="Email Address"
+          name="name-credential"
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+          placeholder="john.doe@example.com"
+        />
+        <FormInput
+          type="password"
+          labelValue="Password"
+          name="password-credential"
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+          placeholder="••••••••"
+        />
+        <FormInput
+          type="password"
+          labelValue="Confirm Password"
+          name="cf-password-credential"
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          value={confirmPassword}
+          placeholder="••••••••"
+        />
         <Button className="mt-4" type="submit">
           Submit
         </Button>

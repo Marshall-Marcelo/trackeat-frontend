@@ -14,3 +14,8 @@ export interface LoginResponse {
   user: User;
   tokens: AccessTokens;
 }
+
+export interface RegisterAccountDetails {
+  email: string;
+  password: string;
+}
