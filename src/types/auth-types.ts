@@ -1,21 +1,25 @@
 export interface User {
   userId: string;
   email: string;
-  userName: string;
-}
-
-export interface AccessTokens {
-  accessToken: string;
-  refreshToken: string;
-  expiresAt: string;
+  username: string;
 }
 
 export interface LoginResponse {
   user: User;
-  tokens: AccessTokens;
+  message: string;
 }
 
 export interface RegisterAccountDetails {
   email: string;
   password: string;
+}
+
+export interface LoginAccountDetails {
+  nameCredential: string;
+  password: string;
+}
+
+export interface RouterContext {
+  isAuthenticated: boolean;
+  user?: User;
 }

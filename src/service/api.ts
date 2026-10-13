@@ -6,13 +6,22 @@ class ApiService {
     options?: RequestInit,
   ): Promise<T> {
     try {
-      const response = await fetch(`${baseUrl}${endpoint}`, {
-        ...options,
-        headers: {
-          'Content-Type': 'application/json',
-          ...options?.headers,
-        },
-      });
+      const makeRequest = () =>
+        fetch(`${baseUrl}${endpoint}`, {
+          ...options,
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+          },
+        });
+
+      let response = await makeRequest();
+
+      if (response.status === 401) {
+        await this.refreshAccessToken();
+        response = await makeRequest();
+      }
 
       if (!response.ok) {
         const data = await response.json();
@@ -26,6 +35,18 @@ class ApiService {
       }
 
       throw error;
+    }
+  }
+
+  private async refreshAccessToken() {
+    const response = await fetch(`${baseUrl}/refresh`, {
+      credentials: 'include',
+      method: 'POST',
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message);
     }
   }
 }

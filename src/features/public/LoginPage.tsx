@@ -1,15 +1,48 @@
 import { useState } from 'react';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import Button from '../../components/Button';
+import { useLoginAccount } from '@/hooks/useLogin';
+import { toast } from 'sonner';
+import { useAuth } from '@/hooks/useAuth';
+import { router } from '@/App';
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const { mutate: loginAccount, isPending: isLoggingIn } = useLoginAccount();
   const [nameCredential, setNameCredential] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Add Modal Here
+    if (!nameCredential || !password) {
+      alert('Incomplete fields');
+      return;
+    }
+
+    if (isLoggingIn) return <h1>Loading</h1>;
+
+    loginAccount(
+      { nameCredential, password },
+      {
+        onSuccess: (data) => {
+          login(data);
+          toast.success(data.message);
+          router.update({
+            context: {
+              isAuthenticated: true,
+              user: data.user,
+            },
+          });
+          navigate({ to: '/app' });
+        },
+        onError: (error) => {
+          toast.error(error.message);
+          console.error('Error logging in', error);
+        },
+      },
+    );
   };
 
   return (

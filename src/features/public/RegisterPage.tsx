@@ -32,8 +32,8 @@ const RegisterPage = () => {
     createAccount(
       { email, password },
       {
-        onSuccess: () => {
-          toast.success('Account created sucessfully');
+        onSuccess: (data) => {
+          toast.success(data.message);
           setEmail('');
           setPassword('');
           setConfirmPassword('');
