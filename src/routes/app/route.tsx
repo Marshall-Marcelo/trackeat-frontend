@@ -4,7 +4,7 @@ import ResponsiveLayout from '../../layouts/ResponsiveLayout';
 export const Route = createFileRoute('/app')({
   component: RouteComponent,
   beforeLoad: ({ context }) => {
-    console.log(context);
+    console.log('Router Context', context);
     if (!context.isAuthenticated) {
       throw redirect({ to: '/login' });
     }

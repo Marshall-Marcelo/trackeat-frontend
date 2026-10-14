@@ -1,5 +1,5 @@
 import { ApiService } from './api';
-import type { LoginResponse } from '../types/auth-types';
+import type { LoginResponse, User } from '../types/auth-types';
 import type { MessageResponse } from '@/types/response';
 
 class AuthService extends ApiService {
@@ -19,6 +19,14 @@ class AuthService extends ApiService {
     const data: MessageResponse = await this.handleFetch(`/auth/register`, {
       method: 'POST',
       body: JSON.stringify({ email, password }),
+    });
+
+    return data;
+  }
+
+  async refreshCurrentUserDetails(): Promise<User> {
+    const data: User = await this.handleFetch(`/auth/me`, {
+      method: 'GET',
     });
 
     return data;

@@ -39,7 +39,7 @@ class ApiService {
   }
 
   private async refreshAccessToken() {
-    const response = await fetch(`${baseUrl}/refresh`, {
+    const response = await fetch(`${baseUrl}/auth/refresh`, {
       credentials: 'include',
       method: 'POST',
     });

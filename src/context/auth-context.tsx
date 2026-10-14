@@ -1,11 +1,13 @@
 import { createContext, useState } from 'react';
 import type { User, LoginResponse } from '@/types/auth-types';
+import { useGetCurrentUser } from '@/hooks/useRefresh';
 
 interface AuthContextType {
   user: User | undefined;
   isAuthenticated: boolean;
-  login: (data: LoginResponse) => void;
-  logout: () => void;
+  isRefreshingUser?: boolean;
+  // login: (data: LoginResponse) => void;
+  // logout: () => void;
 }
 
 type Props = {
@@ -17,24 +19,30 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 );
 
 export function AuthProvider({ children }: Props) {
-  const [user, setUser] = useState<User | undefined>(undefined);
+  const { data: currentUser, isLoading: isRefreshingUser } =
+    useGetCurrentUser();
+  const user = currentUser ?? undefined;
 
-  const login = (data: LoginResponse) => {
-    setUser(data.user);
-    console.log(data);
-  };
+  console.log('Auth Context', user);
+  // const [user, setUser] = useState<User | undefined>(undefined);
 
-  const logout = () => {
-    setUser(undefined);
-  };
+  // const login = (data: LoginResponse) => {
+  //   setUser(data.user);
+  //   console.log(data);
+  // };
+
+  // const logout = () => {
+  //   setUser(undefined);
+  // };
 
   return (
     <AuthContext.Provider
       value={{
         user,
         isAuthenticated: user !== undefined,
-        login,
-        logout,
+        isRefreshingUser: isRefreshingUser,
+        // login,
+        // logout,
       }}
     >
       {children}

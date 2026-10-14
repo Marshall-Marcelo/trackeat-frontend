@@ -1,17 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import Button from '../../components/Button';
 import { useLoginAccount } from '@/hooks/useLogin';
 import { toast } from 'sonner';
+import { updateRouterContext } from '@/lib/utils/routerConfig';
+import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
-import { router } from '@/App';
+import { queryKeys } from '@/lib/utils/query-keys';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  // const queryClient = useQueryClient();
+  const auth = useAuth();
+
+  useEffect(() => {
+    if (!auth.isRefreshingUser && auth.isAuthenticated) {
+      navigate({ to: '/app' });
+    }
+  }, [auth.isRefreshingUser, auth.isAuthenticated, navigate]);
+
   const { mutate: loginAccount, isPending: isLoggingIn } = useLoginAccount();
   const [nameCredential, setNameCredential] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+
+  if (auth.isRefreshingUser || auth.isAuthenticated) {
+    return <p>Loading...</p>;
+  }
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,14 +41,10 @@ const LoginPage = () => {
       { nameCredential, password },
       {
         onSuccess: (data) => {
-          login(data);
+          // login(data);
+          // queryClient.setQueryData(queryKeys.user.current(), data.user);
           toast.success(data.message);
-          router.update({
-            context: {
-              isAuthenticated: true,
-              user: data.user,
-            },
-          });
+          // updateRouterContext(true, data.user);
           navigate({ to: '/app' });
         },
         onError: (error) => {

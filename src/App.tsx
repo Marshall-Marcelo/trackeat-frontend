@@ -1,15 +1,10 @@
-import { createRouter, RouterProvider } from '@tanstack/react-router';
-import { routeTree } from './routeTree.gen';
+import { RouterProvider } from '@tanstack/react-router';
 import { QueryProvider } from './lib/query-client';
 import { Toaster } from 'sonner';
 import type { User } from '@/types/auth-types';
 import { AuthProvider } from '@/context/auth-context';
 import { useAuth } from '@/hooks/useAuth';
-
-export const router = createRouter({
-  routeTree,
-  context: { isAuthenticated: false, user: undefined },
-});
+import { router } from '@/lib/utils/routerConfig';
 
 declare module '@tanstack/react-router' {
   interface Register {
@@ -38,12 +33,12 @@ function RoutedApplication() {
 
 const App = () => {
   return (
-    <AuthProvider>
-      <QueryProvider>
+    <QueryProvider>
+      <AuthProvider>
         <RoutedApplication />
         <Toaster duration={2 * 1000} />
-      </QueryProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </QueryProvider>
   );
 };
 
