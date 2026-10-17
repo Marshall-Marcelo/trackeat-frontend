@@ -2,10 +2,12 @@ type Props = {
   children: React.ReactNode;
 };
 
+import Sidebar from '@/components/Sidebar';
+
 const DesktopLayout = ({ children }: Props) => {
   return (
-    <div>
-      DesktopLayout
+    <div className="flex h-dvh">
+      <Sidebar />
       {children}
     </div>
   );

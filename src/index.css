@@ -3,3 +3,14 @@
 * {
   font-family: Lato, 'Gill Sans';
 }
+
+.lucide {
+  width: 36px;
+  height: 36px;
+  stroke-width: 1.5px;
+}
+
+@media screen and (min-width: 1024px) {
+  .lucide {
+  }
+}

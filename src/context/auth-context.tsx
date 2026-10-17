@@ -23,7 +23,7 @@ export function AuthProvider({ children }: Props) {
     useGetCurrentUser();
   const user = currentUser ?? undefined;
 
-  console.log('Auth Context', user);
+  // console.log('Auth Context', user);
   // const [user, setUser] = useState<User | undefined>(undefined);
 
   // const login = (data: LoginResponse) => {
