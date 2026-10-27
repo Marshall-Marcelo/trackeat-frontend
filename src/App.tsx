@@ -5,6 +5,7 @@ import type { User } from '@/types/auth-types';
 import { AuthProvider } from '@/context/auth-context';
 import { useAuth } from '@/hooks/useAuth';
 import { router } from '@/lib/utils/routerConfig';
+import { LucideProvider } from 'lucide-react';
 
 declare module '@tanstack/react-router' {
   interface Register {
@@ -35,8 +36,10 @@ const App = () => {
   return (
     <QueryProvider>
       <AuthProvider>
-        <RoutedApplication />
-        <Toaster duration={2 * 1000} />
+        <LucideProvider size={24} strokeWidth={1.5}>
+          <RoutedApplication />
+          <Toaster duration={2 * 1000} />
+        </LucideProvider>
       </AuthProvider>
     </QueryProvider>
   );

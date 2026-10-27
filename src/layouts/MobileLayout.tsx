@@ -1,19 +1,19 @@
+import Sidebar from '@/components/Sidebar';
+import { useCurrentRoute } from '@/hooks/useCurrentRoute';
+
 type Props = {
   children: React.ReactNode;
 };
 
-import Sidebar from '@/components/Sidebar';
-import { useRouterState } from '@tanstack/react-router';
-
 const MobileLayout = ({ children }: Props) => {
-  const currentPath = useRouterState({
-    select: (state) => state.location.pathname,
-  });
+  const currentPath = useCurrentRoute();
 
   return (
-    <div className="p-2 flex gap-4 h-dvh">
+    <div className="p-2 flex gap-2 h-dvh ">
       <Sidebar currentlySelected={currentPath} />
-      <div>{children}</div>
+      <div className="w-full p-2 h-dvh overflow-y-auto relative">
+        {children}
+      </div>
     </div>
   );
 };

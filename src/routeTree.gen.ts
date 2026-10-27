@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppTrackerRouteImport } from './routes/app/tracker'
 import { Route as AppSettingsRouteImport } from './routes/app/settings'
+import { Route as AppNewMealRouteImport } from './routes/app/new-meal'
 import { Route as publicRegisterRouteImport } from './routes/(public)/register'
 import { Route as publicLoginRouteImport } from './routes/(public)/login'
 
@@ -47,6 +48,11 @@ const AppSettingsRoute = AppSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppNewMealRoute = AppNewMealRouteImport.update({
+  id: '/new-meal',
+  path: '/new-meal',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const publicRegisterRoute = publicRegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -63,6 +69,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteRouteWithChildren
   '/login': typeof publicLoginRoute
   '/register': typeof publicRegisterRoute
+  '/app/new-meal': typeof AppNewMealRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/tracker': typeof AppTrackerRoute
   '/app/': typeof AppIndexRoute
@@ -71,6 +78,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof publicLoginRoute
   '/register': typeof publicRegisterRoute
+  '/app/new-meal': typeof AppNewMealRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/tracker': typeof AppTrackerRoute
   '/app': typeof AppIndexRoute
@@ -82,6 +90,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteRouteWithChildren
   '/(public)/login': typeof publicLoginRoute
   '/(public)/register': typeof publicRegisterRoute
+  '/app/new-meal': typeof AppNewMealRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/tracker': typeof AppTrackerRoute
   '/app/': typeof AppIndexRoute
@@ -93,11 +102,19 @@ export interface FileRouteTypes {
     | '/app'
     | '/login'
     | '/register'
+    | '/app/new-meal'
     | '/app/settings'
     | '/app/tracker'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/app/settings' | '/app/tracker' | '/app'
+  to:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/app/new-meal'
+    | '/app/settings'
+    | '/app/tracker'
+    | '/app'
   id:
     | '__root__'
     | '/'
@@ -105,6 +122,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/(public)/login'
     | '/(public)/register'
+    | '/app/new-meal'
     | '/app/settings'
     | '/app/tracker'
     | '/app/'
@@ -160,6 +178,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/app/new-meal': {
+      id: '/app/new-meal'
+      path: '/new-meal'
+      fullPath: '/app/new-meal'
+      preLoaderRoute: typeof AppNewMealRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/(public)/register': {
       id: '/(public)/register'
       path: '/register'
@@ -192,12 +217,14 @@ const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
 )
 
 interface AppRouteRouteChildren {
+  AppNewMealRoute: typeof AppNewMealRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppTrackerRoute: typeof AppTrackerRoute
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppNewMealRoute: AppNewMealRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppTrackerRoute: AppTrackerRoute,
   AppIndexRoute: AppIndexRoute,

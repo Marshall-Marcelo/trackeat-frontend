@@ -1,7 +1,13 @@
 import React from 'react';
 import { Link } from '@tanstack/react-router';
 import { cn } from '@/lib/utils/cn';
-import { Home, Settings, NotebookText, LogOut } from 'lucide-react';
+import {
+  Home,
+  Settings,
+  NotebookText,
+  LogOut,
+  ChevronsLeft,
+} from 'lucide-react';
 
 interface SidebarProps {
   className?: string;
@@ -26,8 +32,15 @@ const sidebarContent = [
 const Sidebar = ({ className, currentlySelected }: SidebarProps) => {
   return (
     <div
-      className={cn(' flex flex-col gap-1 shadow-2xl rounded-md', className)}
+      className={cn(
+        ' flex flex-col gap-1 shadow-2xl rounded-md items-center',
+        className,
+      )}
     >
+      <SidebarItem exclude={true}>
+        <ChevronsLeft />
+      </SidebarItem>
+
       {sidebarContent.map((item, i) => {
         return (
           <Link key={item.name + i} to={item.path}>
