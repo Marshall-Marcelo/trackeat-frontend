@@ -4,3 +4,8 @@ export interface NewMeal {
   mealCategories: string[];
   mealDate: string;
 }
+
+export interface MealCategory {
+  categoryId: string;
+  categoryName: string;
+}

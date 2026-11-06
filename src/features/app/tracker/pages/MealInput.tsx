@@ -4,7 +4,8 @@ import { Plus, X, CircleX } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { toast } from 'sonner';
-import type { NewMeal } from '@/types/tracker';
+import type { NewMeal } from '@/types/meal';
+import { useCreateNewMeal } from '@/hooks/useMeal';
 
 const MealInput = () => {
   const [mealName, setMealName] = useState<string | undefined>(undefined);
@@ -17,6 +18,7 @@ const MealInput = () => {
   const [mealDate, setMealDate] = useState<string | undefined>(undefined);
 
   const isMobile = useIsMobile();
+  const { mutate: createMeal, isPending } = useCreateNewMeal();
 
   const mealTypes = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
 
@@ -86,6 +88,8 @@ const MealInput = () => {
       return;
     }
 
+    if (isPending) return <h1>Loading</h1>;
+
     const newMeal: NewMeal = {
       mealName: mealName,
       mealType: mealType,
@@ -93,7 +97,15 @@ const MealInput = () => {
       mealDate: mealDate,
     };
 
-    console.log(newMeal);
+    createMeal(newMeal, {
+      onSuccess: (data) => {
+        toast.success(data.message);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+        console.error('Error logging in', error);
+      },
+    });
   };
 
   return (
@@ -146,7 +158,7 @@ const MealInput = () => {
       <div className="flex flex-col">
         <span className="text-lg">Meal Date</span>
         <input
-          className="border rounded-md"
+          className="border rounded-md w-fit py-1 px-2"
           type="date"
           onChange={(e) => setMealDate(e.target.value)}
         />
