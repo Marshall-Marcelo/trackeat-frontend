@@ -18,3 +18,10 @@ export function useGetMealCategories() {
     queryFn: () => mealService.getMealCategories(),
   });
 }
+
+export function useGetMealTypes() {
+  return useQuery({
+    queryKey: queryKeys.meal.types(),
+    queryFn: () => mealService.getMealTypes(),
+  });
+}

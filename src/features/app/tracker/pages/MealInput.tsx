@@ -1,11 +1,15 @@
 import Button from '@/components/Button';
 import { useState } from 'react';
 import { Plus, X, CircleX } from 'lucide-react';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { toast } from 'sonner';
-import type { NewMeal, MealCategory } from '@/types/meal';
-import { useCreateNewMeal, useGetMealCategories } from '@/hooks/useMeal';
+import type { NewMeal, MealCategory, MealType } from '@/types/meal';
+import {
+  useCreateNewMeal,
+  useGetMealCategories,
+  useGetMealTypes,
+} from '@/hooks/useMeal';
 
 const MealInput = () => {
   const [mealName, setMealName] = useState<string | undefined>(undefined);
@@ -13,16 +17,17 @@ const MealInput = () => {
     undefined,
   );
   const [isOverlayOn, setIsOverlayOn] = useState<boolean>(false);
-  const [mealType, setMealType] = useState<string | undefined>(undefined);
+  const [mealType, setMealType] = useState<MealType | undefined>(undefined);
   const [mealCategories, setMealCategories] = useState<MealCategory[]>([]);
   const [mealDate, setMealDate] = useState<string | undefined>(undefined);
 
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
+
   const { mutate: createMeal, isPending: isCreatingMeal } = useCreateNewMeal();
   const { data: mealCategorySelection, isPending: isFetchingCategories } =
     useGetMealCategories();
-
-  const mealTypes = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
+  const { data: mealTypes, isPending: isFetchingTypes } = useGetMealTypes();
 
   const openMealTypeOverlay = () => {
     setMealSelect('type');
@@ -39,17 +44,19 @@ const MealInput = () => {
     setIsOverlayOn(false);
   };
 
-  const selectMealType = (type: string) => {
+  const selectMealType = (type: MealType) => {
     setMealType(type);
     setIsOverlayOn(false);
   };
 
   const selectMealCategory = (category: MealCategory) => {
-    for (const selectedCategory of mealCategories) {
-      if (selectedCategory.categoryId === category.categoryId) {
-        toast(`${selectedCategory} already selected`);
-        return;
-      }
+    const isSelected = mealCategories.some(
+      (ctg) => ctg.categoryId === category.categoryId,
+    );
+
+    if (isSelected) {
+      toast(`${category.categoryName} already selected`);
+      return;
     }
 
     setMealCategories((prev) => [...prev, category]);
@@ -89,7 +96,7 @@ const MealInput = () => {
 
     const newMeal: NewMeal = {
       mealName: mealName,
-      mealType: mealType,
+      mealType: mealType.typeId,
       mealCategories: categoryIds,
       mealDate: mealDate,
     };
@@ -97,6 +104,7 @@ const MealInput = () => {
     createMeal(newMeal, {
       onSuccess: (data) => {
         toast.success(data.message);
+        navigate({ to: '/app/tracker' });
       },
       onError: (error) => {
         toast.error(error.message);
@@ -119,8 +127,8 @@ const MealInput = () => {
 
       <div className="flex flex-col gap-0.5">
         <span className="text-lg">Meal Type</span>
-        <Button onClick={openMealTypeOverlay} className="w-fit ">
-          {mealType ? mealType : 'Select'}
+        <Button onClick={openMealTypeOverlay} className="w-fit">
+          {mealType ? mealType.typeName : 'Select'}
         </Button>
       </div>
 
@@ -174,12 +182,15 @@ const MealInput = () => {
             <X onClick={closeOverlay} />
           </div>
           <div className="grid grid-cols-2 gap-6 pt-2">
-            {mealSelect === 'type' ? (
+            {mealSelect === 'type' && mealTypes && !isFetchingTypes ? (
               <>
-                {mealTypes.map((type, i) => {
+                {mealTypes.map((type) => {
                   return (
-                    <Button key={type + i} onClick={() => selectMealType(type)}>
-                      {type}
+                    <Button
+                      key={type.typeId}
+                      onClick={() => selectMealType(type)}
+                    >
+                      {type.typeName}
                     </Button>
                   );
                 })}
