@@ -4,8 +4,8 @@ import { Plus, X, CircleX } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { toast } from 'sonner';
-import type { NewMeal } from '@/types/meal';
-import { useCreateNewMeal } from '@/hooks/useMeal';
+import type { NewMeal, MealCategory } from '@/types/meal';
+import { useCreateNewMeal, useGetMealCategories } from '@/hooks/useMeal';
 
 const MealInput = () => {
   const [mealName, setMealName] = useState<string | undefined>(undefined);
@@ -14,23 +14,15 @@ const MealInput = () => {
   );
   const [isOverlayOn, setIsOverlayOn] = useState<boolean>(false);
   const [mealType, setMealType] = useState<string | undefined>(undefined);
-  const [mealCategories, setMealCategories] = useState<string[]>([]);
+  const [mealCategories, setMealCategories] = useState<MealCategory[]>([]);
   const [mealDate, setMealDate] = useState<string | undefined>(undefined);
 
   const isMobile = useIsMobile();
-  const { mutate: createMeal, isPending } = useCreateNewMeal();
+  const { mutate: createMeal, isPending: isCreatingMeal } = useCreateNewMeal();
+  const { data: mealCategorySelection, isPending: isFetchingCategories } =
+    useGetMealCategories();
 
   const mealTypes = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
-
-  const mealCategorySelection = [
-    'Chicken',
-    'Beef',
-    'Pork',
-    'Fish',
-    'Vegetable',
-    'Rice',
-    'Bread',
-  ];
 
   const openMealTypeOverlay = () => {
     setMealSelect('type');
@@ -52,9 +44,9 @@ const MealInput = () => {
     setIsOverlayOn(false);
   };
 
-  const selectMealCategory = (category: string) => {
+  const selectMealCategory = (category: MealCategory) => {
     for (const selectedCategory of mealCategories) {
-      if (selectedCategory === category) {
+      if (selectedCategory.categoryId === category.categoryId) {
         toast(`${selectedCategory} already selected`);
         return;
       }
@@ -64,9 +56,12 @@ const MealInput = () => {
     setIsOverlayOn(false);
   };
 
-  const removeMealCategory = (category: string) => {
+  const removeMealCategory = (category: MealCategory) => {
     setMealCategories((prev) =>
-      prev.filter((existingCateogory) => existingCateogory !== category),
+      prev.filter(
+        (existingCateogory) =>
+          existingCateogory.categoryId !== category.categoryId,
+      ),
     );
   };
 
@@ -88,12 +83,14 @@ const MealInput = () => {
       return;
     }
 
-    if (isPending) return <h1>Loading</h1>;
+    if (isCreatingMeal) return <h1>Loading</h1>;
+
+    const categoryIds = mealCategories.map((category) => category.categoryId);
 
     const newMeal: NewMeal = {
       mealName: mealName,
       mealType: mealType,
-      mealCategories: mealCategories,
+      mealCategories: categoryIds,
       mealDate: mealDate,
     };
 
@@ -133,7 +130,7 @@ const MealInput = () => {
           {mealCategories &&
             mealCategories.map((selectedCategory, i) => {
               return (
-                <div className="relative" key={selectedCategory + i}>
+                <div className="relative" key={selectedCategory.categoryId + i}>
                   <span
                     onClick={() => removeMealCategory(selectedCategory)}
                     className="absolute -right-2 -top-2"
@@ -141,7 +138,7 @@ const MealInput = () => {
                     <CircleX color="white" fill="red" size={16} />
                   </span>
                   <span className="border px-2 py-1 rounded">
-                    {selectedCategory}
+                    {selectedCategory.categoryName}
                   </span>
                 </div>
               );
@@ -187,15 +184,17 @@ const MealInput = () => {
                   );
                 })}
               </>
-            ) : mealSelect === 'category' ? (
+            ) : mealSelect === 'category' &&
+              mealCategorySelection &&
+              !isFetchingCategories ? (
               <>
-                {mealCategorySelection.map((category, i) => {
+                {mealCategorySelection.map((category) => {
                   return (
                     <Button
                       onClick={() => selectMealCategory(category)}
-                      key={category + i}
+                      key={category.categoryId}
                     >
-                      {category}
+                      {category.categoryName}
                     </Button>
                   );
                 })}
