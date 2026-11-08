@@ -1,5 +1,5 @@
-import { createContext, useState } from 'react';
-import type { User, LoginResponse } from '@/types/auth-types';
+import { createContext } from 'react';
+import type { User } from '@/types/auth-types';
 import { useGetCurrentUser } from '@/hooks/useRefresh';
 
 interface AuthContextType {
@@ -23,14 +23,6 @@ export function AuthProvider({ children }: Props) {
     useGetCurrentUser();
   const user = currentUser ?? undefined;
 
-  // console.log('Auth Context', user);
-  // const [user, setUser] = useState<User | undefined>(undefined);
-
-  // const login = (data: LoginResponse) => {
-  //   setUser(data.user);
-  //   console.log(data);
-  // };
-
   // const logout = () => {
   //   setUser(undefined);
   // };
@@ -41,7 +33,6 @@ export function AuthProvider({ children }: Props) {
         user,
         isAuthenticated: user !== undefined,
         isRefreshingUser: isRefreshingUser,
-        // login,
         // logout,
       }}
     >

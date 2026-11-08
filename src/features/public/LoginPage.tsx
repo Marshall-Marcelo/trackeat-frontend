@@ -3,10 +3,7 @@ import { Link, useNavigate } from '@tanstack/react-router';
 import Button from '../../components/Button';
 import { useLoginAccount } from '@/hooks/useLogin';
 import { toast } from 'sonner';
-import { updateRouterContext } from '@/lib/utils/routerConfig';
-import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
-import { queryKeys } from '@/lib/utils/query-keys';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -41,10 +38,7 @@ const LoginPage = () => {
       { nameCredential, password },
       {
         onSuccess: (data) => {
-          // login(data);
-          // queryClient.setQueryData(queryKeys.user.current(), data.user);
           toast.success(data.message);
-          // updateRouterContext(true, data.user);
           navigate({ to: '/app' });
         },
         onError: (error) => {
