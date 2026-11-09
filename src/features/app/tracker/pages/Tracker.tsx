@@ -3,17 +3,39 @@ import Button from '@/components/Button';
 import { Link } from '@tanstack/react-router';
 import { Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import {
-  getCurrentMonth,
-  getCurrentYear,
-  formatDate,
-  formatDisplayDate,
+  getCurrentMonthForDB,
+  getCurrentYearForDB,
+  formatDateForNav,
+  // formatDate,
+  // formatDisplayDate,
 } from '@/lib/utils/date';
 import { addMonths, subMonths } from 'date-fns';
+import { useGetUserMeals } from '@/hooks/useMeal';
+import type { Meal } from '@/types/meal';
 
 const Tracker = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const currentMonth = getCurrentMonth(currentDate);
-  const currentYear = getCurrentYear(currentDate);
+  const navDate = formatDateForNav(currentDate);
+  const currentMonthDB = getCurrentMonthForDB(currentDate);
+  const currentYearDB = getCurrentYearForDB(currentDate);
+
+  const { data: meals = [] } = useGetUserMeals(currentYearDB, currentMonthDB);
+
+  const groupedMeals = meals.reduce<Record<string, Meal[]>>((groups, meal) => {
+    const date = meal.mealDate;
+
+    if (!groups[date]) {
+      groups[date] = [];
+    }
+
+    groups[date].push(meal);
+
+    return groups;
+  }, {});
+
+  const transform = Object.entries(groupedMeals);
+
+  console.log(transform, currentMonthDB);
 
   const decreaseDate = () => {
     setCurrentDate((prev) => subMonths(prev, 1));
@@ -27,7 +49,7 @@ const Tracker = () => {
     <div className="flex flex-col gap-2 h-full">
       <div className="flex justify-between">
         <ChevronLeft className="hover:cursor-pointer" onClick={decreaseDate} />
-        {`${currentMonth} ${currentYear} `}
+        {`${navDate}`}
         <ChevronRight className="hover:cursor-pointer" onClick={increaseDate} />
       </div>
       <div className="flex justify-evenly text-sm">

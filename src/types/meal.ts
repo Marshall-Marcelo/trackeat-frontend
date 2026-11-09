@@ -14,3 +14,11 @@ export interface MealType {
   typeId: string;
   typeName: string;
 }
+
+export interface Meal {
+  mealId: string;
+  mealName: string;
+  mealDate: string;
+  mealType: MealType;
+  mealCategories: MealCategory[];
+}

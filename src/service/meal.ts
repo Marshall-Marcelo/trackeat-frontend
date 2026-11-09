@@ -1,6 +1,6 @@
 import { ApiService } from './api';
 import type { MessageResponse } from '@/types/response';
-import type { MealCategory, MealType } from '@/types/meal';
+import type { MealCategory, MealType, Meal } from '@/types/meal';
 
 class MealService extends ApiService {
   async createMeal(
@@ -32,6 +32,17 @@ class MealService extends ApiService {
     const data: MealType[] = await this.handleFetch(`/meal/get-meal-types`, {
       method: 'GET',
     });
+
+    return data;
+  }
+
+  async getUserMeals(year: string, month: string): Promise<Meal[]> {
+    const data: Meal[] = await this.handleFetch(
+      `/meal/get-meals?year=${year}&month=${month}`,
+      {
+        method: 'GET',
+      },
+    );
 
     return data;
   }
