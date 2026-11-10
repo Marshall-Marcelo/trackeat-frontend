@@ -4,6 +4,15 @@
   font-family: Lato, 'Gill Sans';
 }
 
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: 1px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* .lucide {
   width: 24px;
   height: 24px;

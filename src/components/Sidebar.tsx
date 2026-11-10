@@ -1,13 +1,7 @@
 import React from 'react';
 import { Link } from '@tanstack/react-router';
 import { cn } from '@/lib/utils/cn';
-import {
-  Home,
-  Settings,
-  NotebookText,
-  LogOut,
-  ChevronsLeft,
-} from 'lucide-react';
+import { Home, NotebookText, LogOut, ChevronsLeft, Plus } from 'lucide-react';
 
 interface SidebarProps {
   className?: string;
@@ -26,7 +20,7 @@ interface SidebarItemProps {
 const sidebarContent = [
   { name: 'dashboard', icon: <Home />, path: '/app' },
   { name: 'tracker', icon: <NotebookText />, path: '/app/tracker' },
-  { name: 'dashboard', icon: <Settings />, path: '/app/settings' },
+  { name: 'meal-input', icon: <Plus />, path: '/app/new-meal' },
 ];
 
 const Sidebar = ({ className, currentlySelected }: SidebarProps) => {

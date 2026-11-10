@@ -11,9 +11,9 @@ const MobileLayout = ({ children }: Props) => {
   return (
     <div className="p-2 flex gap-2 h-dvh ">
       <Sidebar currentlySelected={currentPath} />
-      <div className="w-full p-2 h-dvh overflow-y-auto relative">
+      <main className="w-full p-2 h-dvh overflow-y-auto relative bg-white">
         {children}
-      </div>
+      </main>
     </div>
   );
 };

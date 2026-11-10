@@ -12,10 +12,6 @@ export function formatDateForNav(date: string | number | Date) {
   return format(date, 'MMMM yyyy');
 }
 
-export function formatDate(date: string | number | Date) {
-  return format(date, 'yyyy-MM-dd');
-}
-
 export function formatDisplayDate(date: string | number | Date) {
   return format(date, 'MMM dd, EEEE');
 }
