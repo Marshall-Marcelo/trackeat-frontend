@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { cn } from '@/lib/utils/cn';
 import { Home, NotebookText, LogOut, ChevronsLeft, Plus } from 'lucide-react';
@@ -24,15 +24,18 @@ const sidebarContent = [
 ];
 
 const Sidebar = ({ className, currentlySelected }: SidebarProps) => {
+  const [isHidden, setIsHidden] = useState(false);
+
   return (
     <div
       className={cn(
         ' flex flex-col gap-1 shadow-2xl rounded-md items-center',
+        isHidden ? 'hidden' : '',
         className,
       )}
     >
       <SidebarItem exclude={true}>
-        <ChevronsLeft />
+        <ChevronsLeft onClick={() => setIsHidden(true)} />
       </SidebarItem>
 
       {sidebarContent.map((item, i) => {
