@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from '@tanstack/react-router';
 import { cn } from '@/lib/utils/cn';
-import { Home, NotebookText, LogOut, ChevronsLeft, Plus } from 'lucide-react';
+import { Home, NotebookText, LogOut, Plus } from 'lucide-react';
 
 interface SidebarProps {
   className?: string;
@@ -24,19 +24,19 @@ const sidebarContent = [
 ];
 
 const Sidebar = ({ className, currentlySelected }: SidebarProps) => {
-  const [isHidden, setIsHidden] = useState(false);
+  // const [isHidden, setIsHidden] = useState(false);
 
   return (
     <div
       className={cn(
         ' flex flex-col gap-1 shadow-2xl rounded-md items-center',
-        isHidden ? 'hidden' : '',
+        // isHidden ? 'hidden' : '',
         className,
       )}
     >
-      <SidebarItem exclude={true}>
+      {/* <SidebarItem exclude={true}>
         <ChevronsLeft onClick={() => setIsHidden(true)} />
-      </SidebarItem>
+      </SidebarItem> */}
 
       {sidebarContent.map((item, i) => {
         return (
