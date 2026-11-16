@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import Card from '@/components/Card';
-import { LoaderCircle, CircleSmall } from 'lucide-react';
+import { CircleSmall } from 'lucide-react';
 import { useGetUserMeals } from '@/hooks/useMeal';
 import {
   getCurrentMonthForDB,
@@ -12,6 +12,7 @@ import PieChartLabeled from '@/components/charts/PieChartLabeled';
 import type { ChartLabels } from '@/types/chart';
 import { useAuth } from '@/hooks/useAuth';
 import { formatDisplayDate } from '@/lib/utils/date';
+import Loader from '@/components/Loader';
 
 const Dashboard = () => {
   const currentDate = new Date();
@@ -123,7 +124,7 @@ const Dashboard = () => {
   if (isFetchingMeals || isFetchingPrevMeals) {
     return (
       <div className="flex h-full items-center justify-center">
-        <LoaderCircle className="animate-spin" size={32} />
+        <Loader />
       </div>
     );
   }

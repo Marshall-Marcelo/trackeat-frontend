@@ -10,6 +10,7 @@ import {
   useGetMealCategories,
   useGetMealTypes,
 } from '@/hooks/useMeal';
+import Loader from '@/components/Loader';
 
 const MealInput = () => {
   const [mealName, setMealName] = useState<string | undefined>(undefined);
@@ -171,9 +172,11 @@ const MealInput = () => {
 
       <div className="flex gap-2 mt-auto pb-2">
         <Link className="w-full" to={'/app/tracker'}>
-          <Button>Cancel</Button>
+          <Button disabled={isCreatingMeal}>Cancel</Button>
         </Link>
-        <Button onClick={submitMeal}>Submit</Button>
+        <Button disabled={isCreatingMeal} onClick={submitMeal}>
+          {isCreatingMeal ? <Loader /> : 'Submit'}
+        </Button>
       </div>
 
       {isMobile && isOverlayOn && (

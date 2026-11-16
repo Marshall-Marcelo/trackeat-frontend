@@ -4,7 +4,6 @@ import {
   ChevronRight,
   Utensils,
   FaceSlightlyFrowning,
-  LoaderCircle,
   Ellipsis,
 } from 'lucide-react';
 import {
@@ -16,6 +15,7 @@ import {
 import { addMonths, subMonths } from 'date-fns';
 import { useGetUserMeals } from '@/hooks/useMeal';
 import type { Meal } from '@/types/meal';
+import Loader from '@/components/Loader';
 
 const Tracker = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -80,7 +80,7 @@ const Tracker = () => {
   if (isFetchingMeals) {
     return (
       <div className="flex h-full items-center justify-center">
-        <LoaderCircle className="animate-spin" size={32} />
+        <Loader />
       </div>
     );
   }

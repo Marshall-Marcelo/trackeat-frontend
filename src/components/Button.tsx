@@ -3,16 +3,16 @@ import { cn } from '../lib/utils/cn';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  isLoading?: boolean;
   className?: string;
+  disabled?: boolean;
 }
 
-const Button = ({ children, isLoading, className, ...props }: ButtonProps) => {
+const Button = ({ children, className, disabled, ...props }: ButtonProps) => {
   return (
     <button
-      disabled={isLoading}
+      disabled={disabled}
       className={cn(
-        'outline-1 px-2 py-1 w-full rounded hover:cursor-pointer',
+        'outline-1 px-2 py-1 w-full rounded flex justify-center hover:cursor-pointer',
         className,
       )}
       {...props}

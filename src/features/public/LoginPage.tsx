@@ -4,6 +4,7 @@ import Button from '../../components/Button';
 import { useLoginAccount } from '@/hooks/useLogin';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
+import Loader from '@/components/Loader';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -90,8 +91,8 @@ const LoginPage = () => {
             placeholder="••••••••"
           />
         </div>
-        <Button className="mt-4" type="submit">
-          Submit
+        <Button disabled={isLoggingIn} className="mt-4" type="submit">
+          {isLoggingIn ? <Loader /> : 'Submit'}
         </Button>
       </form>
     </div>

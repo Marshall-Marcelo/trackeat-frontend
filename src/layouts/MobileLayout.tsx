@@ -1,7 +1,7 @@
 import Sidebar from '@/components/Sidebar';
 import { useCurrentRoute } from '@/hooks/useCurrentRoute';
 import { useAuth } from '@/hooks/useAuth';
-import { Menu, LogOut, LoaderCircle } from 'lucide-react';
+import { Menu, LogOut } from 'lucide-react';
 import { useState } from 'react';
 import {
   Dialog,
@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useLogoutAccount } from '@/hooks/useLogout';
+import Loader from '@/components/Loader';
 
 type Props = {
   children: React.ReactNode;
@@ -60,11 +61,7 @@ const MobileLayout = ({ children }: Props) => {
                   variant="destructive"
                   disabled={isLoggingOut}
                 >
-                  {isLoggingOut ? (
-                    <LoaderCircle className="animate-spin" size={32} />
-                  ) : (
-                    'Confirm'
-                  )}
+                  {isLoggingOut ? <Loader /> : 'Confirm'}
                 </Button>
               </DialogFooter>
             </DialogContent>

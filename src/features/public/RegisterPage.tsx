@@ -4,6 +4,7 @@ import Button from '../../components/Button';
 import { useRegisterAccount } from '@/hooks/useRegister';
 import { toast } from 'sonner';
 import { FormInput } from '@/components/Input';
+import Loader from '@/components/Loader';
 
 const RegisterPage = () => {
   const { mutate: createAccount, isPending: isCreatingAccount } =
@@ -89,8 +90,8 @@ const RegisterPage = () => {
           value={confirmPassword}
           placeholder="••••••••"
         />
-        <Button className="mt-4" type="submit">
-          Submit
+        <Button disabled={isCreatingAccount} className="mt-4" type="submit">
+          {isCreatingAccount ? <Loader /> : 'Submit'}
         </Button>
       </form>
     </div>
