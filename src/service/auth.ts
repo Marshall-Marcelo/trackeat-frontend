@@ -24,6 +24,14 @@ class AuthService extends ApiService {
     return data;
   }
 
+  async logout(): Promise<MessageResponse> {
+    const data: MessageResponse = await this.handleFetch(`/auth/logout`, {
+      method: 'POST',
+    });
+
+    return data;
+  }
+
   async refreshCurrentUserDetails(): Promise<User> {
     const data: User = await this.handleFetch(`/auth/me`, {
       method: 'GET',

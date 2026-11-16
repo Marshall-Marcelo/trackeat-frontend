@@ -7,7 +7,6 @@ import { useAuth } from '@/hooks/useAuth';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  // const queryClient = useQueryClient();
   const auth = useAuth();
 
   useEffect(() => {

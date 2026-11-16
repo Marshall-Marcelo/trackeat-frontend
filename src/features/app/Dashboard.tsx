@@ -16,7 +16,6 @@ import { formatDisplayDate } from '@/lib/utils/date';
 const Dashboard = () => {
   const currentDate = new Date();
   const auth = useAuth();
-
   const year = getCurrentYearForDB(currentDate);
   const month = getCurrentMonthForDB(currentDate);
   const currentDateParsed = formatDateToDb(currentDate);
@@ -153,32 +152,38 @@ const Dashboard = () => {
               : ' fewer meals compared to last month'}
           </span>
         </div>
-        <div className="flex gap-1 items-center font-light">
-          <CircleSmall className="shrink-0" size={10} fill="black" />
-          <span>
-            You mostly eat during{' '}
-            <span className="font-medium">{highestMealType[0].type}</span> time
-            and the least during{' '}
-            <span className="font-medium">
-              {highestMealType[highestMealType.length - 1].type}
-            </span>{' '}
-            time
-          </span>
-        </div>
-        <div className="flex gap-1 items-center font-light">
-          <CircleSmall className="shrink-0" size={10} fill="black" />
-          <span>
-            You frequently eat{' '}
-            <span className="font-medium">
-              {highestMealCategory[0].category}
-            </span>{' '}
-            meals and rarely eat{' '}
-            <span className="font-medium">
-              {highestMealCategory[highestMealCategory.length - 1].category}
-            </span>{' '}
-            meals
-          </span>
-        </div>
+
+        {highestMealType.length > 2 && (
+          <div className="flex gap-1 items-center font-light">
+            <CircleSmall className="shrink-0" size={10} fill="black" />
+            <span>
+              You mostly eat during{' '}
+              <span className="font-medium">{highestMealType[0].type}</span>{' '}
+              time and the least during{' '}
+              <span className="font-medium">
+                {highestMealType[highestMealType.length - 1].type}
+              </span>{' '}
+              time
+            </span>
+          </div>
+        )}
+
+        {highestMealCategory.length > 2 && (
+          <div className="flex gap-1 items-center font-light">
+            <CircleSmall className="shrink-0" size={10} fill="black" />
+            <span>
+              You frequently eat{' '}
+              <span className="font-medium">
+                {highestMealCategory[0].category}
+              </span>{' '}
+              meals and rarely eat{' '}
+              <span className="font-medium">
+                {highestMealCategory[highestMealCategory.length - 1].category}
+              </span>{' '}
+              meals
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="flex gap-4 justify-evenly w-full">
@@ -191,7 +196,7 @@ const Dashboard = () => {
         <Card
           className="flex-1"
           cardTitle="Meals Today"
-          cardValue={mealsToday ? mealsToday[1].length : 'No Meals Today'}
+          cardValue={mealsToday ? mealsToday[1].length : 'No Meals'}
           cardDescription={formatDisplayDate(currentDate)}
         />
       </div>

@@ -6,8 +6,6 @@ interface AuthContextType {
   user: User | undefined;
   isAuthenticated: boolean;
   isRefreshingUser?: boolean;
-  // login: (data: LoginResponse) => void;
-  // logout: () => void;
 }
 
 type Props = {
@@ -23,17 +21,12 @@ export function AuthProvider({ children }: Props) {
     useGetCurrentUser();
   const user = currentUser ?? undefined;
 
-  // const logout = () => {
-  //   setUser(undefined);
-  // };
-
   return (
     <AuthContext.Provider
       value={{
         user,
         isAuthenticated: user !== undefined,
         isRefreshingUser: isRefreshingUser,
-        // logout,
       }}
     >
       {children}
