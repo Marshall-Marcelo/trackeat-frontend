@@ -8,7 +8,7 @@ const DesktopLayout = ({ children }: Props) => {
   return (
     <div className="flex h-dvh">
       <Sidebar />
-      {children}
+      <div className="w-full"> {children}</div>
     </div>
   );
 };

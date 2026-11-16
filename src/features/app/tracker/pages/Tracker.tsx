@@ -5,6 +5,7 @@ import {
   Utensils,
   FaceSlightlyFrowning,
   LoaderCircle,
+  Ellipsis,
 } from 'lucide-react';
 import {
   getCurrentMonthForDB,
@@ -123,17 +124,20 @@ const Tracker = () => {
                     key={meal.mealId}
                   >
                     <Utensils />
-                    <div className="flex flex-col overflow-x-auto scrollbar-hide">
-                      <span>{meal.mealName}</span>
-                      <div className="flex gap-1 font-light ">
-                        <span>{meal.mealType.typeName}</span> |
-                        {meal.mealCategories.map((category, i) => (
-                          <span key={category.categoryId}>
-                            {category.categoryName}
-                            {i + 1 < meal.mealCategories.length ? ',' : ''}
-                          </span>
-                        ))}
+                    <div className="flex items-center w-full justify-between">
+                      <div className="flex flex-col overflow-x-auto scrollbar-hide">
+                        <span>{meal.mealName}</span>
+                        <div className="flex gap-1 font-light">
+                          <span>{meal.mealType.typeName}</span> |
+                          {meal.mealCategories.map((category, i) => (
+                            <span key={category.categoryId}>
+                              {category.categoryName}
+                              {i + 1 < meal.mealCategories.length ? ',' : ''}
+                            </span>
+                          ))}
+                        </div>
                       </div>
+                      <Ellipsis />
                     </div>
                   </div>
                 ))}

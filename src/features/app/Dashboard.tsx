@@ -1,7 +1,212 @@
-import React from 'react';
+import { useMemo } from 'react';
+import Card from '@/components/Card';
+import { LoaderCircle, CircleSmall } from 'lucide-react';
+import { useGetUserMeals } from '@/hooks/useMeal';
+import {
+  getCurrentMonthForDB,
+  getCurrentYearForDB,
+  formatDateToDb,
+} from '@/lib/utils/date';
+import type { Meal } from '@/types/meal';
+import PieChartLabeled from '@/components/charts/PieChartLabeled';
+import type { ChartLabels } from '@/types/chart';
+import { useAuth } from '@/hooks/useAuth';
+import { formatDisplayDate } from '@/lib/utils/date';
 
 const Dashboard = () => {
-  return <div className="flex flex-col">Dashboard</div>;
+  const currentDate = new Date();
+  const auth = useAuth();
+
+  const year = getCurrentYearForDB(currentDate);
+  const month = getCurrentMonthForDB(currentDate);
+  const currentDateParsed = formatDateToDb(currentDate);
+
+  const getPreviousMonth = () => {
+    let prevMonth = Number(month);
+    let prevYear = Number(year);
+
+    if (prevMonth === 1) {
+      prevMonth = 12;
+      prevYear--;
+    } else {
+      prevMonth--;
+    }
+
+    return {
+      parsedMonth: String(prevMonth).padStart(2, '0'),
+      parsedYear: String(prevYear),
+    };
+  };
+
+  const { parsedMonth, parsedYear } = getPreviousMonth();
+
+  const { data: meals = [], isPending: isFetchingMeals } = useGetUserMeals(
+    year,
+    month,
+  );
+  const { data: prevMeals = [], isPending: isFetchingPrevMeals } =
+    useGetUserMeals(parsedYear, parsedMonth);
+
+  const groupMealsByDate = useMemo(() => {
+    return meals.reduce<Record<string, Meal[]>>((groups, meal) => {
+      const date = meal.mealDate;
+
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+
+      groups[date].push(meal);
+
+      return groups;
+    }, {});
+  }, [meals]);
+
+  const transformedGroupMeals = Object.entries(groupMealsByDate);
+
+  const mealsToday = transformedGroupMeals.find(([date, meal]) => {
+    if (date === currentDateParsed) {
+      return meal;
+    }
+  });
+
+  const groupMealsByCategory = useMemo(() => {
+    return meals.reduce<Record<string, number>>((groups, meal) => {
+      const categories = meal.mealCategories;
+
+      for (const category of categories) {
+        if (!groups[category.categoryName]) {
+          groups[category.categoryName] = 0;
+        }
+
+        groups[category.categoryName]++;
+      }
+
+      return groups;
+    }, {});
+  }, [meals]);
+
+  const highestMealCategory = Object.entries(groupMealsByCategory)
+    .map(([category, count]) => ({
+      category,
+      count,
+    }))
+    .filter((meal) => meal.category !== 'Rice' && meal.category !== 'Bread')
+    .sort((a, b) => b.count - a.count);
+
+  const mealsByCategoryForCharts: ChartLabels[] = Object.entries(
+    groupMealsByCategory,
+  ).map(([name, value]) => ({
+    name,
+    value,
+  }));
+
+  const groupMealsByType = useMemo(() => {
+    return meals.reduce<Record<string, number>>((mealTypes, meal) => {
+      const mealType = meal.mealType.typeName;
+
+      if (!mealTypes[mealType]) {
+        mealTypes[mealType] = 0;
+      }
+
+      mealTypes[mealType]++;
+
+      return mealTypes;
+    }, {});
+  }, [meals]);
+
+  const highestMealType = Object.entries(groupMealsByType)
+    .map(([type, count]) => ({
+      type,
+      count,
+    }))
+    .sort((a, b) => b.count - a.count);
+
+  if (isFetchingMeals || isFetchingPrevMeals) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <LoaderCircle className="animate-spin" size={32} />
+      </div>
+    );
+  }
+
+  const mealsByTypeForCharts: ChartLabels[] = Object.entries(
+    groupMealsByType,
+  ).map(([name, value]) => ({
+    name,
+    value,
+  }));
+
+  const mealDifference = Math.abs(meals.length - prevMeals.length);
+
+  return (
+    <div className="flex flex-col gap-2 items-center">
+      <span className="self-start text-xl">Hellow, {auth.user?.username}</span>
+
+      <div className="w-full flex flex-col gap-0.5 rounded-lg shadow p-2">
+        <span className="font-light">Meals Analysis</span>
+        <div className="flex gap-1 items-start font-light">
+          <CircleSmall className="mt-2 shrink-0" size={10} fill="black" />
+          <span>
+            You logged <span className="font-medium">{mealDifference}</span>
+            {meals.length > prevMeals.length
+              ? ' more meals compared to last month'
+              : ' fewer meals compared to last month'}
+          </span>
+        </div>
+        <div className="flex gap-1 items-center font-light">
+          <CircleSmall className="shrink-0" size={10} fill="black" />
+          <span>
+            You mostly eat during{' '}
+            <span className="font-medium">{highestMealType[0].type}</span> time
+            and the least during{' '}
+            <span className="font-medium">
+              {highestMealType[highestMealType.length - 1].type}
+            </span>{' '}
+            time
+          </span>
+        </div>
+        <div className="flex gap-1 items-center font-light">
+          <CircleSmall className="shrink-0" size={10} fill="black" />
+          <span>
+            You frequently eat{' '}
+            <span className="font-medium">
+              {highestMealCategory[0].category}
+            </span>{' '}
+            meals and rarely eat{' '}
+            <span className="font-medium">
+              {highestMealCategory[highestMealCategory.length - 1].category}
+            </span>{' '}
+            meals
+          </span>
+        </div>
+      </div>
+
+      <div className="flex gap-4 justify-evenly w-full">
+        <Card
+          className="flex-1"
+          cardTitle={'Total meals'}
+          cardValue={meals.length}
+          cardDescription="This month"
+        />
+        <Card
+          className="flex-1"
+          cardTitle="Meals Today"
+          cardValue={mealsToday ? mealsToday[1].length : 'No Meals Today'}
+          cardDescription={formatDisplayDate(currentDate)}
+        />
+      </div>
+
+      <div className="w-full rounded-lg shadow p-2">
+        <span className="font-light">Meal Category Breakdown</span>
+        <PieChartLabeled data={mealsByCategoryForCharts} />
+      </div>
+
+      <div className="w-full rounded-lg shadow p-2">
+        <span className="font-light">Meal Type Breakdown</span>
+        <PieChartLabeled data={mealsByTypeForCharts} />
+      </div>
+    </div>
+  );
 };
 
 export default Dashboard;

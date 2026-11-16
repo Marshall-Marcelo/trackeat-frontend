@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from '@tanstack/react-router';
 import { cn } from '@/lib/utils/cn';
-import { Home, NotebookText, LogOut, Plus } from 'lucide-react';
+import { Home, NotebookText, Plus } from 'lucide-react';
 
 interface SidebarProps {
   className?: string;
   currentlySelected: string;
+  isHidden?: boolean;
 }
 
 interface SidebarItemProps {
@@ -23,21 +24,15 @@ const sidebarContent = [
   { name: 'meal-input', icon: <Plus />, path: '/app/new-meal' },
 ];
 
-const Sidebar = ({ className, currentlySelected }: SidebarProps) => {
-  // const [isHidden, setIsHidden] = useState(false);
-
+const Sidebar = ({ className, currentlySelected, isHidden }: SidebarProps) => {
   return (
     <div
       className={cn(
         ' flex flex-col gap-1 shadow-2xl rounded-md items-center',
-        // isHidden ? 'hidden' : '',
+        isHidden ? 'hidden' : '',
         className,
       )}
     >
-      {/* <SidebarItem exclude={true}>
-        <ChevronsLeft onClick={() => setIsHidden(true)} />
-      </SidebarItem> */}
-
       {sidebarContent.map((item, i) => {
         return (
           <Link key={item.name + i} to={item.path}>
@@ -51,10 +46,6 @@ const Sidebar = ({ className, currentlySelected }: SidebarProps) => {
           </Link>
         );
       })}
-
-      <SidebarItem className="mt-auto" exclude={true}>
-        <LogOut color="red" />
-      </SidebarItem>
     </div>
   );
 };
