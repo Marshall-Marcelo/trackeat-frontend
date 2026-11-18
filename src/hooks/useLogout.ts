@@ -11,8 +11,8 @@ export function useLogoutAccount() {
     onSuccess: (data) => {
       queryClient.clear();
       navigate({ to: '/login' });
-      // window.location.reload();
       toast(data.message);
+      window.location.reload();
     },
   });
 }
