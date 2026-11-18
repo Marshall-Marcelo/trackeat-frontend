@@ -107,7 +107,7 @@ export default function PieChartLabeled({
     <PieChart
       style={{
         width: '100%',
-        maxWidth: '500px',
+        maxWidth: '400px',
         maxHeight: '80vh',
         aspectRatio: 1,
       }}

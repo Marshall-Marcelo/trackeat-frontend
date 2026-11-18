@@ -21,7 +21,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-const MobileLayout = ({ children }: Props) => {
+const AppLayout = ({ children }: Props) => {
   const auth = useAuth();
   const currentPath = useCurrentRoute();
 
@@ -68,14 +68,20 @@ const MobileLayout = ({ children }: Props) => {
           </Dialog>
         </div>
       </div>
-      <div className="p-2 flex gap-2 h-dvh">
-        <Sidebar currentlySelected={currentPath} isHidden={isHidden} />
-        <main className="w-full p-2 h-dvh overflow-y-auto relative bg-white">
-          {children}
+      <div className="p-2 flex gap-2">
+        <Sidebar
+          className="h-fit"
+          currentlySelected={currentPath}
+          isHidden={isHidden}
+        />
+        <main className="w-full flex flex-col items-center p-2 rounded-sm">
+          <div className="max-w-200 w-full bg-white p-2 rounded-sm">
+            {children}
+          </div>
         </main>
       </div>
     </>
   );
 };
 
-export default MobileLayout;
+export default AppLayout;

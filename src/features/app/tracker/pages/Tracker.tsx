@@ -160,7 +160,11 @@ const Tracker = () => {
                         </div>
                       </div>
                       <Popover>
-                        <PopoverTrigger render={<Ellipsis />} />
+                        <PopoverTrigger
+                          render={
+                            <Ellipsis className="hover: cursor-pointer" />
+                          }
+                        />
                         <PopoverContent
                           className={'bg-white w-fit'}
                           align="start"

@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
-import MobileLayout from '@/layouts/AppLayout';
+import AppLayout from '@/layouts/AppLayout';
 
 export const Route = createFileRoute('/app')({
   component: RouteComponent,
@@ -12,8 +12,8 @@ export const Route = createFileRoute('/app')({
 
 function RouteComponent() {
   return (
-    <MobileLayout>
+    <AppLayout>
       <Outlet />
-    </MobileLayout>
+    </AppLayout>
   );
 }

@@ -211,26 +211,28 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="w-full rounded-lg shadow p-2">
-        <span className="font-light">Meal Category Breakdown</span>
-        {meals.length === 0 ? (
-          <p className="text-center text-sm font-light">
-            Provide more data for chart display breakdown
-          </p>
-        ) : (
-          <PieChartLabeled data={mealsByCategoryForCharts} />
-        )}
-      </div>
+      <div className="w-full md:flex gap-4">
+        <div className="w-full flex flex-col items-center rounded-lg shadow p-2">
+          <span className="font-light self-start">Meal Category Breakdown</span>
+          {meals.length === 0 ? (
+            <p className="text-center text-sm font-light">
+              Provide more data for chart display breakdown
+            </p>
+          ) : (
+            <PieChartLabeled data={mealsByCategoryForCharts} />
+          )}
+        </div>
 
-      <div className="w-full rounded-lg shadow p-2">
-        <span className="font-light">Meal Type Breakdown</span>
-        {meals.length === 0 ? (
-          <p className="text-center text-sm font-light">
-            Provide more data for chart display breakdown
-          </p>
-        ) : (
-          <PieChartLabeled data={mealsByTypeForCharts} />
-        )}
+        <div className="w-full flex flex-col items-center rounded-lg shadow p-2">
+          <span className="font-light self-start">Meal Type Breakdown</span>
+          {meals.length === 0 ? (
+            <p className="text-center text-sm font-light">
+              Provide more data for chart display breakdown
+            </p>
+          ) : (
+            <PieChartLabeled data={mealsByTypeForCharts} />
+          )}
+        </div>
       </div>
     </div>
   );
