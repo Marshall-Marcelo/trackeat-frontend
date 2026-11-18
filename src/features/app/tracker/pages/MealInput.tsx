@@ -2,7 +2,6 @@ import Button from '@/components/Button';
 import { useState } from 'react';
 import { Plus, X, CircleX } from 'lucide-react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { toast } from 'sonner';
 import type { NewMeal, MealCategory, MealType } from '@/types/meal';
 import {
@@ -22,7 +21,6 @@ const MealInput = () => {
   const [mealCategories, setMealCategories] = useState<MealCategory[]>([]);
   const [mealDate, setMealDate] = useState<string | undefined>(undefined);
 
-  const isMobile = useIsMobile();
   const navigate = useNavigate();
 
   const { mutate: createMeal, isPending: isCreatingMeal } = useCreateNewMeal();
@@ -179,7 +177,7 @@ const MealInput = () => {
         </Button>
       </div>
 
-      {isMobile && isOverlayOn && (
+      {isOverlayOn && (
         <div className="absolute top-0 left-0 w-full bg-white h-full p-4">
           <div className="flex justify-end">
             <X onClick={closeOverlay} />
