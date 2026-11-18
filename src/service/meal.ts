@@ -17,6 +17,27 @@ class MealService extends ApiService {
     return data;
   }
 
+  async editMeal(
+    mealId: string,
+    mealName: string,
+    mealType: string,
+    mealCategories: string[],
+    mealDate: string,
+  ): Promise<MessageResponse> {
+    const data: MessageResponse = await this.handleFetch(`/meal/edit-meal`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        mealId,
+        mealName,
+        mealType,
+        mealCategories,
+        mealDate,
+      }),
+    });
+
+    return data;
+  }
+
   async getMealCategories(): Promise<MealCategory[]> {
     const data: MealCategory[] = await this.handleFetch(
       `/meal/get-meal-categories`,
@@ -41,6 +62,25 @@ class MealService extends ApiService {
       `/meal/get-meals?year=${year}&month=${month}`,
       {
         method: 'GET',
+      },
+    );
+
+    return data;
+  }
+
+  async getSelectedMeal(mealId: string): Promise<Meal> {
+    const data: Meal = await this.handleFetch(`/meal/get-meal/${mealId}`, {
+      method: 'GET',
+    });
+
+    return data;
+  }
+
+  async deleteSelectedMeal(mealId: string): Promise<MessageResponse> {
+    const data: MessageResponse = await this.handleFetch(
+      `/meal/delete-meal/${mealId}`,
+      {
+        method: 'DELETE',
       },
     );
 

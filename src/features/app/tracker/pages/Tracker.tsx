@@ -13,15 +13,37 @@ import {
   formatDisplayDate,
 } from '@/lib/utils/date';
 import { addMonths, subMonths } from 'date-fns';
-import { useGetUserMeals } from '@/hooks/useMeal';
+import { useGetUserMeals, useDeleteMeal } from '@/hooks/useMeal';
 import type { Meal } from '@/types/meal';
 import Loader from '@/components/Loader';
+import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { toast } from 'sonner';
+import { Link } from '@tanstack/react-router';
 
 const Tracker = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const navDate = formatDateForNav(currentDate);
   const currentMonthDB = getCurrentMonthForDB(currentDate);
   const currentYearDB = getCurrentYearForDB(currentDate);
+
+  const { mutate: deleteMeal, isPending: isDeletingMeal } = useDeleteMeal(
+    currentYearDB,
+    currentMonthDB,
+  );
+
+  const handleMealDelete = (mealId: string) => {
+    deleteMeal(mealId, {
+      onSuccess: (data) => {
+        toast(data.message);
+      },
+    });
+  };
 
   const { data: meals = [], isPending: isFetchingMeals } = useGetUserMeals(
     currentYearDB,
@@ -137,7 +159,36 @@ const Tracker = () => {
                           ))}
                         </div>
                       </div>
-                      <Ellipsis />
+                      <Popover>
+                        <PopoverTrigger render={<Ellipsis />} />
+                        <PopoverContent
+                          className={'bg-white w-fit'}
+                          align="start"
+                        >
+                          <PopoverHeader className={'flex flex-row gap-2'}>
+                            <Link
+                              to={'/app/edit-meal/$mealId'}
+                              params={{ mealId: meal.mealId }}
+                            >
+                              <Button
+                                className={'font-medium'}
+                                variant={'outline'}
+                              >
+                                Edit
+                              </Button>
+                            </Link>
+
+                            <Button
+                              onClick={() => handleMealDelete(meal.mealId)}
+                              disabled={isDeletingMeal}
+                              className={'bg-red-600 text-white font-medium'}
+                              variant={'destructive'}
+                            >
+                              {isDeletingMeal ? <Loader /> : 'Delete'}
+                            </Button>
+                          </PopoverHeader>
+                        </PopoverContent>
+                      </Popover>
                     </div>
                   </div>
                 ))}

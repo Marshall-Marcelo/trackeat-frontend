@@ -91,7 +91,7 @@ const MealInput = () => {
       return;
     }
 
-    if (isCreatingMeal) return <h1>Loading</h1>;
+    if (isCreatingMeal) return <Loader />;
 
     const categoryIds = mealCategories.map((category) => category.categoryId);
 
@@ -109,7 +109,7 @@ const MealInput = () => {
       },
       onError: (error) => {
         toast.error(error.message);
-        console.error('Error logging in', error);
+        console.error('Meal creation error', error);
       },
     });
   };
@@ -117,7 +117,7 @@ const MealInput = () => {
   return (
     <div className="flex flex-col gap-2 h-full">
       <div className="flex flex-col gap-0.5">
-        <span className="text-lg">Meal Name</span>
+        <span className="text-sm font-semibold">Meal Name</span>
         <input
           id="67"
           className="border rounded-sm p-2 text-sm"
@@ -127,14 +127,14 @@ const MealInput = () => {
       </div>
 
       <div className="flex flex-col gap-0.5">
-        <span className="text-lg">Meal Type</span>
+        <span className="text-sm font-semibold">Meal Type</span>
         <Button onClick={openMealTypeOverlay} className="w-fit">
           {mealType ? mealType.typeName : 'Select'}
         </Button>
       </div>
 
       <div className="flex flex-col">
-        <span className="text-lg">Meal Category/s</span>
+        <span className="text-sm font-semibold">Meal Category/s</span>
         <div className="flex items-center flex-wrap gap-2">
           {mealCategories &&
             mealCategories.map((selectedCategory, i) => {
@@ -162,7 +162,7 @@ const MealInput = () => {
       </div>
 
       <div className="flex flex-col">
-        <span className="text-lg">Meal Date</span>
+        <span className="text-sm font-semibold">Meal Date</span>
         <input
           className="border rounded-md w-fit py-1 px-2"
           type="date"

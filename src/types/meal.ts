@@ -5,6 +5,10 @@ export interface NewMeal {
   mealDate: string;
 }
 
+export interface ExistingMealEdit extends NewMeal {
+  mealId: string;
+}
+
 export interface MealCategory {
   categoryId: string;
   categoryName: string;

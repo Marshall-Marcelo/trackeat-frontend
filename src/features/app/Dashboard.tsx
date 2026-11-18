@@ -147,10 +147,19 @@ const Dashboard = () => {
         <div className="flex gap-1 items-start font-light">
           <CircleSmall className="mt-2 shrink-0" size={10} fill="black" />
           <span>
-            You logged <span className="font-medium">{mealDifference}</span>
-            {meals.length > prevMeals.length
-              ? ' more meals compared to last month'
-              : ' fewer meals compared to last month'}
+            You logged{' '}
+            {mealDifference === 0 ? (
+              <span>
+                the <span className="font-medium">same</span> count of
+              </span>
+            ) : (
+              <span className="font-medium">{mealDifference}</span>
+            )}
+            {mealDifference === 0
+              ? ' meals compared to last month'
+              : meals.length > prevMeals.length
+                ? ' more meal/s compared to last month'
+                : ' fewer meal/s compared to last month'}
           </span>
         </div>
 
@@ -204,12 +213,24 @@ const Dashboard = () => {
 
       <div className="w-full rounded-lg shadow p-2">
         <span className="font-light">Meal Category Breakdown</span>
-        <PieChartLabeled data={mealsByCategoryForCharts} />
+        {meals.length === 0 ? (
+          <p className="text-center text-sm font-light">
+            Provide more data for chart display breakdown
+          </p>
+        ) : (
+          <PieChartLabeled data={mealsByCategoryForCharts} />
+        )}
       </div>
 
       <div className="w-full rounded-lg shadow p-2">
         <span className="font-light">Meal Type Breakdown</span>
-        <PieChartLabeled data={mealsByTypeForCharts} />
+        {meals.length === 0 ? (
+          <p className="text-center text-sm font-light">
+            Provide more data for chart display breakdown
+          </p>
+        ) : (
+          <PieChartLabeled data={mealsByTypeForCharts} />
+        )}
       </div>
     </div>
   );
